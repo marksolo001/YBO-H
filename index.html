@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YBO$H | Premium Streetwear</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #000000;
+            --secondary: #ffffff;
+            --accent: #ff4d00;
+            --light-accent: #ff7b33;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--primary);
+            color: var(--secondary);
+            overflow-x: hidden;
+        }
+        
+        .logo-font {
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 90vh;
+        }
+        
+        .product-card:hover .product-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .product-overlay {
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .nav-link::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .dropdown-menu {
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 24px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-20px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
+        
+        .newsletter-input {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .newsletter-input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+        
+        .size-selector input:checked + label {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        .color-selector input:checked + label {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 2px var(--secondary);
+        }
+        
+        .quick-view-btn {
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        
+        .product-card:hover .quick-view-btn {
+            opacity: 1;
+        }
+        
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="bg-black text-white text-sm py-2 px-4 flex justify-between items-center border-b border-gray-800">
+        <div class="flex space-x-4">
+            <a href="#" class="hover:text-accent transition">Free shipping on orders over $150</a>
+        </div>
+        <div class="flex space-x-6">
+            <a href="#" class="hover:text-accent transition">Store Locator</a>
+            <a href="#" class="hover:text-accent transition">Customer Service</a>
+            <a href="#" class="hover:text-accent transition">Join Us</a>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-black text-white py-4 px-6 lg:px-12 border-b border-gray-800 sticky top-0 z-50">
+        <div class="flex justify-between items-center">
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="lg:hidden text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <!-- Logo -->
+            <div class="logo-font text-4xl">
+                <a href="#" class="text-white hover:text-accent transition">YBO<span class="text-accent">$</span>H</a>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden lg:flex space-x-8 items-center">
+                <div class="dropdown relative">
+                    <a href="#" class="nav-link py-2 px-1 hover:text-accent transition">New Arrivals</a>
+                    <div class="dropdown-menu absolute left-0 mt-2 w-48 bg-black border border-gray-800 rounded shadow-lg py-2 z-50">
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-900 hover:text-accent">Just Dropped</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-900 hover:text-accent">Coming Soon</a>
+                    </div>
+                </div>
+                <div class="dropdown relative">
+                    <a href="#" class="nav-link py-2 px-1 hover:text-accent transition">Men</a>
+                    <div class="dropdown-menu absolute left-0 mt-2 w-48 bg-black border border-gray-800 rounded shadow-lg py-2 z-50">
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-900 hover:text-accent">T-Shirts</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-900 hover:text-accent">Hoodies</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-900 hover:text-accent">Pants</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-900 hover:text-accent">Accessories</a>
+                    </div>
+                </div>
+                <div class="dropdown relative">
+                    <a href="#" class="nav-link py-2 px-1 hover:text-accent transition">Women</a>
+                    <div class="dropdown-menu absolute left-0 mt-2 w-48 bg-black border border-gray-800 rounded shadow-lg py-2 z-50">
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-900 hover:text-accent">T-Shirts</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-900 hover:text-accent">Hoodies</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-900 hover:text-accent">Pants</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-900 hover:text-accent">Accessories</a>
+                    </div>
+                </div>
+                <div class="dropdown relative">
+                    <a href="#" class="nav-link py-2 px-1 hover:text-accent transition">Collections</a>
+                    <div class="dropdown-menu absolute left-0 mt-2 w-48 bg-black border border-gray-800 rounded shadow-lg py-2 z-50">
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-900 hover:text-accent">Limited Edition</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-900 hover:text-accent">Collaborations</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-900 hover:text-accent">Archive</a>
+                    </div>
+                </div>
+                <a href="#" class="nav-link py-2 px-1 hover:text-accent transition">About</a>
+            </div>
+            
+            <!-- Icons -->
+            <div class="flex items-center space-x-6">
+                <div class="hidden lg:block relative">
+                    <a href="#" class="text-xl hover:text-accent transition"><i class="fas fa-search"></i></a>
+                </div>
+                <div class="relative">
+                    <a href="#" class="text-xl hover:text-accent transition"><i class="fas fa-user"></i></a>
+                </div>
+                <div class="relative">
+                    <a href="#" class="text-xl hover:text-accent transition">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu fixed inset-y-0 right-0 w-64 bg-black z-50 p-6 overflow-y-auto">
+        <div class="flex justify-between items-center mb-8">
+            <div class="logo-font text-3xl">
+                <a href="#" class="text-white hover:text-accent transition">YBO<span class="text-accent">$</span>H</a>
+            </div>
+            <button id="close-mobile-menu" class="text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="space-y-6">
+            <a href="#" class="block py-2 border-b border-gray-800 hover:text-accent transition">New Arrivals</a>
+            <a href="#" class="block py-2 border-b border-gray-800 hover:text-accent transition">Men</a>
+            <a href="#" class="block py-2 border-b border-gray-800 hover:text-accent transition">Women</a>
+            <a href="#" class="block py-2 border-b border-gray-800 hover:text-accent transition">Collections</a>
+            <a href="#" class="block py-2 border-b border-gray-800 hover:text-accent transition">About</a>
+            <div class="pt-4">
+                <a href="#" class="block py-2 hover:text-accent transition"><i class="fas fa-search mr-2"></i> Search</a>
+                <a href="#" class="block py-2 hover:text-accent transition"><i class="fas fa-user mr-2"></i> Account</a>
+                <a href="#" class="block py-2 hover:text-accent transition">
+                    <i class="fas fa-shopping-bag mr-2"></i> Cart <span class="text-accent">(0)</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section relative flex items-center justify-center">
+        <div class="text-center px-4">
+            <h1 class="logo-font text-6xl md:text-8xl mb-4">LIMITED <span class="text-accent">DROP</span></h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">Exclusive streetwear collection available for a limited time only. Don't miss out.</p>
+            <a href="#" class="inline-block bg-accent hover:bg-light-accent text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105">
+                SHOP NOW
+            </a>
+        </div>
+        <div class="scroll-down">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="py-16 px-6 lg:px-12">
+        <div class="flex justify-between items-center mb-12">
+            <h2 class="logo-font text-4xl">FEATURED PRODUCTS</h2>
+            <a href="#" class="text-accent hover:underline">View All</a>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Product 1 -->
+            <div class="product-card group relative overflow-hidden">
+                <div class="relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1069&q=80" alt="Product" class="w-full h-auto transition duration-500 group-hover:scale-105">
+                    <div class="product-overlay absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                        <button class="quick-view-btn bg-accent text-black font-bold py-2 px-6 rounded-full hover:bg-light-accent transition">
+                            QUICK VIEW
+                        </button>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-accent text-black text-xs font-bold px-2 py-1 rounded">
+                        NEW
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-lg font-semibold">YBO$H Logo Hoodie</h3>
+                    <p class="text-gray-400">Black / Oversized Fit</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="font-bold">$120.00</span>
+                        <div class="flex space-x-1">
+                            <div class="w-4 h-4 rounded-full bg-black border border-gray-600"></div>
+                            <div class="w-4 h-4 rounded-full bg-gray-600 border border-gray-600"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 2 -->
+            <div class="product-card group relative overflow-hidden">
+                <div class="relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1064&q=80" alt="Product" class="w-full h-auto transition duration-500 group-hover:scale-105">
+                    <div class="product-overlay absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                        <button class="quick-view-btn bg-accent text-black font-bold py-2 px-6 rounded-full hover:bg-light-accent transition">
+                            QUICK VIEW
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-lg font-semibold">Destroyed Denim Jacket</h3>
+                    <p class="text-gray-400">Light Blue / Distressed</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="font-bold">$180.00</span>
+                        <div class="flex space-x-1">
+                            <div class="w-4 h-4 rounded-full bg-blue-400 border border-gray-600"></div>
+                            <div class="w-4 h-4 rounded-full bg-black border border-gray-600"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 3 -->
+            <div class="product-card group relative overflow-hidden">
+                <div class="relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80" alt="Product" class="w-full h-auto transition duration-500 group-hover:scale-105">
+                    <div class="product-overlay absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                        <button class="quick-view-btn bg-accent text-black font-bold py-2 px-6 rounded-full hover:bg-light-accent transition">
+                            QUICK VIEW
+                        </button>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                        SALE
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-lg font-semibold">Graphic Print T-Shirt</h3>
+                    <p class="text-gray-400">White / Street Art</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <div>
+                            <span class="font-bold text-accent">$45.00</span>
+                            <span class="text-gray-400 line-through ml-2">$60.00</span>
+                        </div>
+                        <div class="flex space-x-1">
+                            <div class="w-4 h-4 rounded-full bg-white border border-gray-600"></div>
+                            <div class="w-4 h-4 rounded-full bg-red-500 border border-gray-600"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 4 -->
+            <div class="product-card group relative overflow-hidden">
+                <div class="relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Product" class="w-full h-auto transition duration-500 group-hover:scale-105">
+                    <div class="product-overlay absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                        <button class="quick-view-btn bg-accent text-black font-bold py-2 px-6 rounded-full hover:bg-light-accent transition">
+                            QUICK VIEW
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-lg font-semibold">Cargo Pants</h3>
+                    <p class="text-gray-400">Olive / Utility Style</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="font-bold">$95.00</span>
+                        <div class="flex space-x-1">
+                            <div class="w-4 h-4 rounded-full bg-green-800 border border-gray-600"></div>
+                            <div class="w-4 h-4 rounded-full bg-black border border-gray-600"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Banner Section -->
+    <section class="py-16 px-6 lg:px-12 bg-gray-900">
+        <div class="flex flex-col lg:flex-row items-center">
+            <div class="lg:w-1/2 mb-8 lg:mb-0 lg:pr-12">
+                <h2 class="logo-font text-4xl md:text-5xl mb-6">THE YBO<span class="text-accent">$</span>H EXPERIENCE</h2>
+                <p class="text-gray-300 mb-6">Born from the streets, crafted for the elite. Our collections blend urban edge with premium craftsmanship to create pieces that stand out from the crowd.</p>
+                <a href="#" class="inline-block border-2 border-accent text-accent hover:bg-accent hover:text-black font-bold py-3 px-8 rounded-full transition">
+                    OUR STORY
+                </a>
+            </div>
+            <div class="lg:w-1/2 relative">
+                <img src="https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Brand Experience" class="w-full rounded-lg shadow-xl floating">
+                <div class="absolute -bottom-6 -right-6 bg-accent w-24 h-24 rounded-full flex items-center justify-center text-black text-4xl logo-font z-10">
+                    YB
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Arrivals -->
+    <section class="py-16 px-6 lg:px-12">
+        <div class="flex justify-between items-center mb-12">
+            <h2 class="logo-font text-4xl">NEW ARRIVALS</h2>
+            <a href="#" class="text-accent hover:underline">View All</a>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Product 5 -->
+            <div class="product-card group relative overflow-hidden">
+                <div class="relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80" alt="Product" class="w-full h-auto transition duration-500 group-hover:scale-105">
+                    <div class="product-overlay absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                        <button class="quick-view-btn bg-accent text-black font-bold py-2 px-6 rounded-full hover:bg-light-accent transition">
+                            QUICK VIEW
+                        </button>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-accent text-black text-xs font-bold px-2 py-1 rounded">
+                        NEW
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-lg font-semibold">Logo Track Jacket</h3>
+                    <p class="text-gray-400">Black / Red Accents</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="font-bold">$135.00</span>
+                        <div class="flex space-x-1">
+                            <div class="w-4 h-4 rounded-full bg-black border border-gray-600"></div>
+                            <div class="w-4 h-4 rounded-full bg-red-500 border border-gray-600"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 6 -->
+            <div class="product-card group relative overflow-hidden col-span-1 sm:col-span-2 lg:col-span-1">
+                <div class="relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Product" class="w-full h-auto transition duration-500 group-hover:scale-105">
+                    <div class="product-overlay absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                        <button class="quick-view-btn bg-accent text-black font-bold py-2 px-6 rounded-full hover:bg-light-accent transition">
+                            QUICK VIEW
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-lg font-semibold">High-Top Sneakers</h3>
+                    <p class="text-gray-400">White / Black Details</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="font-bold">$220.00</span>
+                        <div class="flex space-x-1">
+                            <div class="w-4 h-4 rounded-full bg-white border border-gray-600"></div>
+                            <div class="w-4 h-4 rounded-full bg-black border border-gray-600"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 7 -->
+            <div class="product-card group relative overflow-hidden">
+                <div class="relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1594938291141-40397d613a58?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Product" class="w-full h-auto transition duration-500 group-hover:scale-105">
+                    <div class="product-overlay absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                        <button class="quick-view-btn bg-accent text-black font-bold py-2 px-6 rounded-full hover:bg-light-accent transition">
+                            QUICK VIEW
+                        </button>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-accent text-black text-xs font-bold px-2 py-1 rounded">
+                        NEW
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-lg font-semibold">Distressed Denim Jeans</h3>
+                    <p class="text-gray-400">Black / Ripped Details</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="font-bold">$110.00</span>
+                        <div class="flex space-x-1">
+                            <div class="w-4 h-4 rounded-full bg-black border border-gray-600"></div>
+                            <div class="w-4 h-4 rounded-full bg-blue-800 border border-gray-600"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instagram Feed -->
+    <section class="py-16 px-6 lg:px-12 bg-gray-900">
+        <div class="text-center mb-12">
+            <h2 class="logo-font text-4xl mb-4">#YBO<span class="text-accent">$</span>H</h2>
+            <p class="text-gray-300 max-w-2xl mx-auto">Tag us in your YBO$H fits for a chance to be featured</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="relative group overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Instagram" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                    <i class="fab fa-instagram text-white text-3xl"></i>
+                </div>
+            </div>
+            <div class="relative group overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80" alt="Instagram" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                    <i class="fab fa-instagram text-white text-3xl"></i>
+                </div>
+            </div>
+            <div class="relative group overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Instagram" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                    <i class="fab fa-instagram text-white text-3xl"></i>
+                </div>
+            </div>
+            <div class="relative group overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Instagram" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                    <i class="fab fa-instagram text-white text-3xl"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-16 px-6 lg:px-12 border-t border-b border-gray-800">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="logo-font text-4xl mb-4">JOIN THE MOVEMENT</h2>
+            <p class="text-gray-300 mb-8 max-w-2xl mx-auto">Subscribe to our newsletter for exclusive drops, early access, and special offers.</p>
+            
+            <form class="flex flex-col sm:flex-row max-w-md mx-auto">
+                <input type="email" placeholder="Your email address" class="newsletter-input flex-grow px-4 py-3 rounded-l sm:rounded-r-none sm:rounded-l mb-2 sm:mb-0 text-white">
+                <button type="submit" class="bg-accent hover:bg-light-accent text-black font-bold py-3 px-6 rounded-r sm:rounded-l-none rounded transition">
+                    SUBSCRIBE
+                </button>
+            </form>
+            
+            <p class="text-xs text-gray-500 mt-4">By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-gray-400 py-12 px-6 lg:px-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+            <div>
+                <h3 class="logo-font text-2xl text-white mb-4">YBO<span class="text-accent">$</span>H</h3>
+                <p class="mb-4">Premium streetwear for those who demand more. Established 2018.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-xl hover:text-accent transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-xl hover:text-accent transition"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-xl hover:text-accent transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-xl hover:text-accent transition"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            
+            <div>
+                <h4 class="text-white font-semibold mb-4">SHOP</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-accent transition">New Arrivals</a></li>
+                    <li><a href="#" class="hover:text-accent transition">Men's Collection</a></li>
+                    <li><a href="#" class="hover:text-accent transition">Women's Collection</a></li>
+                    <li><a href="#" class="hover:text-accent transition">Accessories</a></li>
+                    <li><a href="#" class="hover:text-accent transition">Sale</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="text-white font-semibold mb-4">CUSTOMER SERVICE</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-accent transition">Contact Us</a></li>
+                    <li><a href="#" class="hover:text-accent transition">FAQs</a></li>
+                    <li><a href="#" class="hover:text-accent transition">Shipping & Returns</a></li>
+                    <li><a href="#" class="hover:text-accent transition">Store Policy</a></li>
+                    <li><a href="#" class="hover:text-accent transition">Payment Methods</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="text-white font-semibold mb-4">ABOUT</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-accent transition">Our Story</a></li>
+                    <li><a href="#" class="hover:text-accent transition">Sustainability</a></li>
+                    <li><a href="#" class="hover:text-accent transition">Careers</a></li>
+                    <li><a href="#" class="hover:text-accent transition">Press</a></li>
+                    <li><a href="#" class="hover:text-accent transition">Wholesale</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p class="text-sm mb-4 md:mb-0">© 2025 YBO$H. All rights reserved.</p>
+            <div class="flex space-x-6">
+                <a href="#" class="text-sm hover:text-accent transition">Privacy Policy</a>
+                <a href="#" class="text-sm hover:text-accent transition">Terms of Service</a>
+                <a href="#" class="text-sm hover:text-accent transition">Cookie Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Quick View Modal -->
+    <div id="quick-view-modal" class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center hidden">
+        <div class="bg-black text-white max-w-6xl w-full mx-4 max-h-screen overflow-y-auto">
+            <div class="relative">
+                <button id="close-quick-view" class="absolute top-4 right-4 text-2xl z-10 hover:text-accent transition">
+                    <i class="fas fa-times"></i>
+                </button>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+                    <div class="relative">
+                        <div class="sticky top-8">
+                            <img id="quick-view-image" src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1069&q=80" alt="Product" class="w-full rounded-lg">
+                            <div class="flex mt-4 space-x-4">
+                                <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1069&q=80" alt="Thumbnail" class="w-20 h-20 object-cover rounded cursor-pointer border-2 border-accent">
+                                <img src="https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1064&q=80" alt="Thumbnail" class="w-20 h-20 object-cover rounded cursor-pointer border-2 border-transparent hover:border-gray-600">
+                                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80" alt="Thumbnail" class="w-20 h-20 object-cover rounded cursor-pointer border-2 border-transparent hover:border-gray-600">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2 id="quick-view-title" class="logo-font text-3xl mb-2">YBO$H Logo Hoodie</h2>
+                        <div class="flex items-center mb-4">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-gray-400 ml-2">(24 reviews)</span>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <span id="quick-view-price" class="text-2xl font-bold">$120.00</span>
+                            <span class="text-gray-400 ml-2">USD</span>
+                        </div>
+                        
+                        <p id="quick-view-description" class="text-gray-300 mb-6">Premium oversized hoodie featuring the iconic YBO$H logo embroidered on the chest. Made from heavyweight cotton blend for maximum comfort and durability.</p>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-lg font-semibold mb-3">COLOR</h4>
+                            <div class="color-selector flex space-x-3">
+                                <input type="radio" name="color" id="color-black" value="black" class="hidden" checked>
+                                <label for="color-black" class="w-10 h-10 rounded-full bg-black border-2 border-gray-600 cursor-pointer"></label>
+                                
+                                <input type="radio" name="color" id="color-gray" value="gray" class="hidden">
+                                <label for="color-gray" class="w-10 h-10 rounded-full bg-gray-600 border-2 border-gray-600 cursor-pointer"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-8">
+                            <h4 class="text-lg font-semibold mb-3">SIZE</h4>
+                            <div class="size-selector grid grid-cols-5 gap-2">
+                                <input type="radio" name="size" id="size-xs" value="xs" class="hidden">
+                                <label for="size-xs" class="border border-gray-600 py-2 text-center rounded cursor-pointer hover:border-accent">XS</label>
+                                
+                                <input type="radio" name="size" id="size-s" value="s" class="hidden">
+                                <label for="size-s" class="border border-gray-600 py-2 text-center rounded cursor-pointer hover:border-accent">S</label>
+                                
+                                <input type="radio" name="size" id="size-m" value="m" class="hidden" checked>
+                                <label for="size-m" class="border border-gray-600 py-2 text-center rounded cursor-pointer hover:border-accent">M</label>
+                                
+                                <input type="radio" name="size" id="size-l" value="l" class="hidden">
+                                <label for="size-l" class="border border-gray-600 py-2 text-center rounded cursor-pointer hover:border-accent">L</label>
+                                
+                                <input type="radio" name="size" id="size-xl" value="xl" class="hidden">
+                                <label for="size-xl" class="border border-gray-600 py-2 text-center rounded cursor-pointer hover:border-accent">XL</label>
+                            </div>
+                            <a href="#" class="text-sm text-gray-400 hover:text-accent mt-2 inline-block">Size Guide</a>
+                        </div>
+                        
+                        <div class="flex space-x-4 mb-6">
+                            <div class="flex border border-gray-600 rounded">
+                                <button class="px-4 py-2 hover:bg-gray-900">-</button>
+                                <span class="px-4 py-2">1</span>
+                                <button class="px-4 py-2 hover:bg-gray-900">+</button>
+                            </div>
+                            <button class="bg-accent hover:bg-light-accent text-black font-bold flex-grow py-3 px-6 rounded transition">
+                                ADD TO CART
+                            </button>
+                        </div>
+                        
+                        <div class="border-t border-gray-800 pt-4">
+                            <div class="accordion mb-2">
+                                <button class="accordion-btn flex justify-between items-center w-full text-left py-2 hover:text-accent transition">
+                                    <span>Product Details</span>
+                                    <i class="fas fa-chevron-down transition-transform"></i>
+                                </button>
+                                <div class="accordion-content hidden text-gray-400 py-2">
+                                    <ul class="list-disc pl-5 space-y-1">
+                                        <li>80% Cotton, 20% Polyester</li>
+                                        <li>Oversized fit</li>
+                                        <li>Embroidered logo</li>
+                                        <li>Kangaroo pocket</li>
+                                        <li>Ribbed cuffs and hem</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion mb-2">
+                                <button class="accordion-btn flex justify-between items-center w-full text-left py-2 hover:text-accent transition">
+                                    <span>Shipping & Returns</span>
+                                    <i class="fas fa-chevron-down transition-transform"></i>
+                                </button>
+                                <div class="accordion-content hidden text-gray-400 py-2">
+                                    <p>Free shipping on orders over $150. Returns accepted within 30 days of purchase. Items must be unworn and in original condition.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            document.body.style.overflow = '';
+        });
+        
+        // Quick View Modal
+        const quickViewButtons = document.querySelectorAll('.quick-view-btn');
+        const quickViewModal = document.getElementById('quick-view-modal');
+        const closeQuickView = document.getElementById('close-quick-view');
+        
+        quickViewButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                quickViewModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        closeQuickView.addEventListener('click', () => {
+            quickViewModal.classList.add('hidden');
+            document.body.style.overflow = '';
+        });
+        
+        // Accordion
+        const accordionButtons = document.querySelectorAll('.accordion-btn');
+        
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('i');
+                
+                content.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+        
+        // Thumbnail Image Switch
+        const thumbnails = document.querySelectorAll('#quick-view-modal img[alt="Thumbnail"]');
+        const mainImage = document.getElementById('quick-view-image');
+        
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', () => {
+                // Remove active border from all thumbnails
+                thumbnails.forEach(t => t.classList.remove('border-accent', 'border-2'));
+                thumbnails.forEach(t => t.classList.add('border-transparent'));
+                
+                // Add active border to clicked thumbnail
+                thumbnail.classList.remove('border-transparent');
+                thumbnail.classList.add('border-accent', 'border-2');
+                
+                // Update main image
+                mainImage.src = thumbnail.src;
+            });
+        });
+        
+        // Color Selector
+        const colorInputs = document.querySelectorAll('.color-selector input');
+        colorInputs.forEach(input => {
+            input.addEventListener('change', () => {
+                // Update product image based on color selection
+                // This would be more dynamic in a real implementation
+                console.log('Selected color:', input.value);
+            });
+        });
+        
+        // Size Selector
+        const sizeInputs = document.querySelectorAll('.size-selector input');
+        sizeInputs.forEach(input => {
+            input.addEventListener('change', () => {
+                // Update selected size
+                console.log('Selected size:', input.value);
+            });
+        });
+        
+        // Quantity Selector
+        const minusButton = document.querySelector('.flex.border button:first-child');
+        const plusButton = document.querySelector('.flex.border button:last-child');
+        const quantityDisplay = document.querySelector('.flex.border span');
+        
+        let quantity = 1;
+        
+        minusButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (quantity > 1) {
+                quantity--;
+                quantityDisplay.textContent = quantity;
+            }
+        });
+        
+        plusButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            quantity++;
+            quantityDisplay.textContent = quantity;
+        });
+    </script>
+</body>
+</html>
